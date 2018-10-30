@@ -34,7 +34,7 @@ Each year's data has different schema. This program should be able to identify t
     For example, state1 and state2 both are work state fields necessary for generating top 10 states metric.
     Here is the approach I used to handle such fields:
     ** Create a static list of possible field names to match across. Match the required column with its static list
-    ** If you found atleast 1 match; use it, else apply regex to identify the field.
+    ** If you found atleast 1 match; use it, else apply regex to identify the field. Please note: regex might fetch different attributes as there is no consistency in the fields.
     ** If after above two operations, we still get more than 1 field for a required column, we merge the fields into one, using following logic:
         *** Assumption: It is assumed that the duplicate fields are stored in order of priority in the data file.
         *** The first field is used as base, subsequent field's values are overwritten on to the base field only if it is found empty or None.
