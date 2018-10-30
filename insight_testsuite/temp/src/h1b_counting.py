@@ -1,4 +1,5 @@
 import csv
+import re
 import sys
 from operator import itemgetter
 from functools import cmp_to_key
@@ -155,25 +156,28 @@ def get_top_occupations(count, data, soc_name_field_list,soc_code_field_list, ce
         top_occupations = 'TOP_OCCUPATIONS'
         n_applications = 'NUMBER_CERTIFIED_APPLICATIONS'
         percent = 'PERCENTAGE'
-        # If the column has more than one entry in the data table,
+        # If the column has more than one field in the data table, (pw_soc_code and lca_soc_code)
         # we assign value from secondary fields to primary field if primary field has null value or have empty string
-        for x in data:
-            for i in range(1, len(case_number_field_list)):
-                final_case_number = x[case_number_field_list[i]] if x[case_number_field_list[0]] is None or x[case_number_field_list[0]] == '' else x[case_number_field_list[0]]
-                x.update({case_number_field_list[0]: final_case_number})
+        if len(case_number_field_list)>1:
+            for x in data:
+                for i in range(1, len(case_number_field_list)):
+                    final_case_number = x[case_number_field_list[i]] if x[case_number_field_list[0]] is None or x[case_number_field_list[0]] == '' else x[case_number_field_list[0]]
+                    x.update({case_number_field_list[0]: final_case_number})
 
-            for i in range(1, len(certification_status_field_list)):
-                final_status_value = x[certification_status_field_list[i]] if x[certification_status_field_list[0]] is None or x[certification_status_field_list[0]] == '' else x[certification_status_field_list[0]]
-                x.update({certification_status_field_list[0]: final_status_value})
+        if len(certification_status_field_list) > 1:
+            for x in data:
+                for i in range(1, len(certification_status_field_list)):
+                    final_status_value = x[certification_status_field_list[i]] if x[certification_status_field_list[0]] is None or x[certification_status_field_list[0]] == '' else x[certification_status_field_list[0]]
+                    x.update({certification_status_field_list[0]: final_status_value})
 
-            for i in range(1, len(soc_code_field_list)):
-                final_soc_code_field = x[soc_code_field_list[i]] if x[soc_code_field_list[0]] is None or x[
-                    soc_code_field_list[0]] == '' else x[soc_code_field_list[0]]
-                x.update({soc_code_field_list[0]: final_soc_code_field})
-
-                final_soc_name_field = x[soc_name_field_list[i]] if x[soc_name_field_list[0]] is None or x[
-                    soc_name_field_list[0]] == '' else x[soc_name_field_list[0]]
-                x.update({soc_name_field_list[0]: final_soc_name_field})
+        if len(soc_code_field_list) > 1:
+            for x in data:
+                for i in range(1, len(soc_code_field_list)):
+                    if x[soc_code_field_list[0]] is None or x[soc_code_field_list[0]] == '':
+                        final_soc_code_field = x[soc_code_field_list[i]]
+                        final_soc_name_field = x[soc_name_field_list[i]]
+                        x.update({soc_code_field_list[0]: final_soc_code_field})
+                        x.update({soc_name_field_list[0]: final_soc_name_field})
 
         filtered_data = query_load(data, lambda r: r[certification_status_field_list[0]] == "CERTIFIED"
                                                    and r[soc_code_field_list[0]] is not None and r[soc_code_field_list[0]] != ''
@@ -215,18 +219,23 @@ def get_top_states(count, data, work_state_field_list, certification_status_fiel
 
         # If the column has more than one entry in the data table,
         # we assign value from secondary fields to primary field if primary field has null value or have empty string
-        for x in data:
-            for i in range(1, len(work_state_field_list)):
-                final_state_name = x[work_state_field_list[i]] if x[work_state_field_list[0]] is None or x[work_state_field_list[0]] =='' else x[work_state_field_list[0]]
-                x.update({work_state_field_list[0]: final_state_name})
+        if len(work_state_field_list)>1:
+            for x in data:
+                for i in range(1, len(work_state_field_list)):
+                    final_state_name = x[work_state_field_list[i]] if x[work_state_field_list[0]] is None or x[work_state_field_list[0]] =='' else x[work_state_field_list[0]]
+                    x.update({work_state_field_list[0]: final_state_name})
 
-            for i in range(1, len(case_number_field_list)):
-                final_case_number = x[case_number_field_list[i]] if x[case_number_field_list[0]] is None or x[case_number_field_list[0]] =='' else x[case_number_field_list[0]]
-                x.update({case_number_field_list[0]: final_case_number})
+        if len(case_number_field_list) > 1:
+            for x in data:
+                for i in range(1, len(case_number_field_list)):
+                    final_case_number = x[case_number_field_list[i]] if x[case_number_field_list[0]] is None or x[case_number_field_list[0]] =='' else x[case_number_field_list[0]]
+                    x.update({case_number_field_list[0]: final_case_number})
 
-            for i in range(1, len(certification_status_field_list)):
-                final_status_value = x[certification_status_field_list[i]] if x[certification_status_field_list[0]] is None or x[certification_status_field_list[0]] =='' else x[certification_status_field_list[0]]
-                x.update({certification_status_field_list[0]: final_status_value})
+        if len(certification_status_field_list)>1:
+            for x in data:
+                for i in range(1, len(certification_status_field_list)):
+                    final_status_value = x[certification_status_field_list[i]] if x[certification_status_field_list[0]] is None or x[certification_status_field_list[0]] =='' else x[certification_status_field_list[0]]
+                    x.update({certification_status_field_list[0]: final_status_value})
 
         filtered_data = query_load(data, lambda r: r[certification_status_field_list[0]] == "CERTIFIED"
                                                    and r[work_state_field_list[0]] is not None and r[work_state_field_list[0]] != '',
@@ -254,8 +263,6 @@ def main():
         if len(argv) !=3:
             raise ValueError("This script takes 3 arguments: 1 input file path followed by 2 output file paths")
             sys.exit(1)
-        # argv = [r'../input/h1b_input.csv', '../output/top_10_occupations.txt',
-        #         '../output/top_10_states.txt']
 
         # Load the data from csv file
         headers, data = load_data(argv[0])
@@ -266,6 +273,19 @@ def main():
         certification_status_field_list = [k for k in headers if k in static_certification_status_field_list]
         case_number_field_list = [k for k in headers if k in static_case_number_field_list]
         work_state_field_list = [k for k in headers if k in static_work_state_field_list]
+
+        # If matching from the static list fails, use regex to identify field names
+        soc_name_field_list = list(filter(re.compile('.*(soc).*_(title|name)$').match,
+                                            headers)) if not soc_name_field_list else soc_name_field_list
+        soc_code_field_list = list(filter(re.compile('.*(soc).*_(code)$').match,
+                                            headers)) if not soc_code_field_list else soc_code_field_list
+        certification_status_field_list = list(filter(re.compile('.*(case|approval).*status$').match,
+                                            headers)) if not certification_status_field_list else certification_status_field_list
+        case_number_field_list = list(filter(re.compile('.*case.*_(number|no)$').match,
+                                            headers)) if not case_number_field_list else case_number_field_list
+
+        work_state_field_list = list(filter(re.compile('.*(work|worksite).*_state$').match, headers)) if not work_state_field_list else work_state_field_list
+
 
         # Checking if we found the required fields and their length
         # Length of all fields should be 1 except work_state_field which can have more than 1 field

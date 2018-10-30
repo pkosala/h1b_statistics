@@ -70,14 +70,26 @@ Go to the /insight_testsuite folder and run the shell script using following com
 ./run_tests.sh
 ```
 ```
-=========================================================
-=========================================================
-=========================================================
-==========EXPLAIN TEST CASES HERE==========================
-=========================================================
-=========================================================
-=========================================================
+* status_filter
+    output should ignore rows with empty status and also filter out rows with uncertified status
+
+* Output_file_with_headers
+    Create empty output file incase data exists but the required rows don't
+
+* soc_name_code_filter
+    Ignore rows which donot have soc_code. Also ignore rows which do not have soc_name ( Added according to my assumptions described above)
+
+* multiple and empty soc names and codes
+    IF there are multiple SOC names and codes, primary fields should be given importance
+    If SOC code of primary field is empty or null, then secondary codes should be considered and soc names of corresponding secondary codes should only be used.
+    Rows with empty soc codes or soc_names should be ignored
+
+* multiple and empty state names
+    IF there are multiple state names, primary fields should be given importance
+    If state name of primary field is empty or null, then secondary names should be considered.
+    Rows with empty state name should be ignored
 ```
+
 ## Authors
 
 * **Pooja Kosala**

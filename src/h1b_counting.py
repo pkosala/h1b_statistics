@@ -173,13 +173,11 @@ def get_top_occupations(count, data, soc_name_field_list,soc_code_field_list, ce
         if len(soc_code_field_list) > 1:
             for x in data:
                 for i in range(1, len(soc_code_field_list)):
-                    final_soc_code_field = x[soc_code_field_list[i]] if x[soc_code_field_list[0]] is None or x[
-                        soc_code_field_list[0]] == '' else x[soc_code_field_list[0]]
-                    x.update({soc_code_field_list[0]: final_soc_code_field})
-
-                    final_soc_name_field = x[soc_name_field_list[i]] if x[soc_name_field_list[0]] is None or x[
-                        soc_name_field_list[0]] == '' else x[soc_name_field_list[0]]
-                    x.update({soc_name_field_list[0]: final_soc_name_field})
+                    if x[soc_code_field_list[0]] is None or x[soc_code_field_list[0]] == '':
+                        final_soc_code_field = x[soc_code_field_list[i]]
+                        final_soc_name_field = x[soc_name_field_list[i]]
+                        x.update({soc_code_field_list[0]: final_soc_code_field})
+                        x.update({soc_name_field_list[0]: final_soc_name_field})
 
         filtered_data = query_load(data, lambda r: r[certification_status_field_list[0]] == "CERTIFIED"
                                                    and r[soc_code_field_list[0]] is not None and r[soc_code_field_list[0]] != ''
@@ -292,7 +290,7 @@ def main():
         # Checking if we found the required fields and their length
         # Length of all fields should be 1 except work_state_field which can have more than 1 field
         if len(soc_name_field_list) == 0 or len(soc_code_field_list) == 0 or len(certification_status_field_list) == 0 \
-                or len(case_number_field_list) == 0 or len(work_state_field_list) == 0:
+                or len(case_number_field_list) == 0 or len(work_state_field_list) == 0 or len(soc_name_field_list) != len(soc_code_field_list):
             raise ValueError("Could not find the required fields: SOC Name, SOC Code, Certification Status, Employee Work State or Case Number")
 
         else:
